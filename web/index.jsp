@@ -26,7 +26,7 @@
 //        Class.forName("com.mysql.jdbc.Driver");
 //        con = DriverManager.getConnection("jdbc:mysql://localhost/shop","root","");
 //        ps=con.prepareStatement("insert into customer values(?,?,?)");
-        String sql="INSERT INTO customer VALUES(?,?,?)";
+        String sql="INSERT INTO customer (cus_name,con_no,address) VALUES(?,?,?)";
         Class.forName("com.mysql.jdbc.Driver");
         java.sql.Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/shop","root","");
         PreparedStatement ps;
@@ -37,7 +37,7 @@
         ps.setString(1,name);
         ps.setString(2, number);
         ps.setString(3, address);
-        int n=ps.executeUpdate();
+        ps.executeUpdate();
        
        %>
    
@@ -60,7 +60,9 @@
               border-collapse: collapse;
               width: 100%;
             }
-
+            submit{
+               background-color: blue; 
+            }
             td, th {
               border: 1px solid #dddddd;
               text-align: left;
@@ -81,11 +83,11 @@
         <div class="page1"> 
             <div class="form">
                 <form class="card" method="POST" action="#">
-                  <label for="fname">First name:</label><br>
+                  <label for="Cname">Customer name:</label><br>
                   <input type="text" id="name" name="name" value=""><br>
-                  <label for="lname">Mobile No.</label><br>
+                  <label for="con_no">Mobile No.</label><br>
                   <input type="number" id="mobileNo" name="MobileNo" value=""><br>
-                  <label for="lname">Address</label><br>
+                  <label for="address">Address</label><br>
                   <input type="text" id="address" name="address" value="">
                   <br><br>
                   <input type="submit" id="submit" value="submit" name="submit">
@@ -95,14 +97,47 @@
             <div class="table">
                 
 
-            <h2>HTML Table</h2>
+            <h2>Customer List</h2>
             <table>
               <tr>
                 <th>Customer Name</th>
                 <th>Contact N0.</th>
                 <th>Address</th>
                 <th>Edit</th>
+                <th>Delete</th>
               </tr>
+              
+
+              
+        <%  
+                Connection con;
+            
+                java.sql.ResultSet rs;
+
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://localhost/shop","root","");
+                String query = "select * from customer";
+                Statement st = con.createStatement();
+
+                rs =  st.executeQuery(query);
+
+                  while(rs.next())
+                   {
+                       String id=rs.getString("id");
+              
+              %>
+              
+              <tr>
+                  <td><%=rs.getString("cus_name") %></td>
+                  <td><%=rs.getString("con_no") %></td>
+                  <td><%=rs.getString("address") %></td>
+                  <td> <a href="update.jsp?id=<%=id%>"> Edit </a> </td>
+                  <td> <a href="delete.jsp?id=<%=id%>"> Delete </a></td>
+              </tr>
+              
+              <%
+                } 
+              %>
               
             </table>
                 
